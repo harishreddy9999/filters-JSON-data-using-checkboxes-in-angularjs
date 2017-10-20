@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stockroom</title>
+	<!--Angular script file -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<!-- Bootstrap minified css file -->
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="range.css">
+	<script data-require="ui-bootstrap@*" data-semver="0.12.1" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+	
+</head>
+<body>
+<!-- navbar heading -->
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="https://stockroom.io/">
+	      	<img src="img/stockroom_logo.jpg" alt="Stockroom">
+	      </a>
+	    </div>
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Dashboard <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#">Challenges</a></li>
+	        <li><a href="#">MyChallenges</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hi,Harish! <span class="caret"></span></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Edit Profile</a></li>
+	            <li><a href="#">Logout</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+	    </div><!--navbar-collapse -->
+  </div><!--container-fluid -->
+</nav>
+
+	<!-- body section -->
+	<div class="container-fluid row" ng-app="myApp"  ng-controller="myCtrl">
+		<!-- filters div -->
+		<div class="col-lg-3 filters">
+		<!-- filters and clear all section -->
+			<div class="float">
+				<h4><b>Filters</b></h4>
+				<button class="button" ng-click="clear(); req()"><b>Clear all</b></button>
+			</div>
+			<!-- company section -->
+			<div class="space">
+			
+				<h5><b>Company</b></h5>
+				<div class="checkbox">
+				  <label><input type="checkbox" ng-model="types.Amazon">Amazon</label>
+				  <span class="Aspan">{{amazon()}}</span>
+				</div>
+				<div class="checkbox">
+				  <label><input type="checkbox" ng-model="types.Thoughtworks" value="">ThoughtWorks</label>
+				  <span class="Tspan">{{thought()}}</span>
+				</div>
+				<div class="checkbox">
+				  <label><input type="checkbox" ng-model="types.Stockroom" value="">StockRoom.io</label>
+				  <span class="Sspan">{{stockroom()}}</span>
+				</div>
+				
+				<div class="checkbox">
+				  <label><input type="checkbox" ng-model="types.Flipkart" value="">Flipkart</label>
+				  <span class="Fspan">{{flipkart()}}</span>
+				</div>
+			</div>
+			<!-- Challenges section -->
+			<div class="space">
+				<h5><b>Challenges</b></h5>
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="types1.online" value="">online</label>
+					<span class="Cspan">{{online()}}</span>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="types1.offline" value="">offline</label>
+					<span class="Cspan">{{offline()}}</span>
+				</div>
+			</div>
+			<!-- Skills section -->
+			<div class="space">
+				<h5><b>Skills</b></h5>
+				<form>
+					<div class="form-group">
+				   		 <input ng-model="tests" type="text" class="form-control" id="skills" placeholder="Loading...">
+				   		 <span>{{tests}}</span>
+				    </div>
+				</form>
+			</div>
+			<!-- Experience section -->
+			<div class="space">
+				<h5><b>Experience</b></h5>
+				<label>MIN:{{expMin}} 
+					<input type="range" min="0" max="8" ng-model="expMin">
+				</label>
+				<label>MAX: {{expMax}}
+					<input type="range" min="0" max="8" ng-model="expMax">
+				</label>
+
+			</div>
+			<!-- CTC section -->
+			<div class="space1">
+				<h5><b>CTC(LPA)</b></h5>
+				<label>MIN:{{ctcMin}} 
+					<input type="range" min="0" max="8" ng-model="ctcMin">
+				</label>
+				<label>MAX:{{ctcMax}} 
+					<input type="range" min="0" max="10" ng-model="ctcMax">
+				</label>
+			</div>
+		</div>
+		<!-- end of first grid -->
+		<!-- search & results div -->
+		<div class="col-lg-8 main">
+			<!-- search div -->
+			<div> 
+				<div id="imaginary_container"> 
+                	<div class="input-group stylish-input-group">
+                    	<input ng-model='test' type="text" class="form-control"  placeholder="Search by challenge name, job position or skill" >
+                    	<span class="input-group-addon">
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>  
+                    	</span>
+                	</div>
+            	</div>
+				<!-- result div -->
+				
+				<div class="results">
+					<div ng-repeat="results in result | filter:test | filter:tests | myfilter:types| myfilter2:types1 | limitTo:5:(0+(5*(currentPage-1)))">
+						<div class="load sections">
+							<!-- job listing state -->
+						
+							 <img class="logo" ng-src="img/stockroom_logo.jpg" alt="image not found"> <!--Logos -->
+							<span class="title"><b>{{results.job_title}}</b></span> <!-- jobs title -->
+							<div class="webURL"><a ng-href="{{results.company_website}}" target="_blank">{{results.company_name}}</a></div>
+							<div class="req">
+								<div class="row">
+									<div class="col-lg-2">	
+										<div class="ctc">
+											<span><b>CTC</b></span></br>
+											<span>{{results.ctc}} LPA</span>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<div class="exp">
+											<span><b>EXPERIENCE</b></span></br>
+											<span>{{results.min_experience}} Years Min </span></br>
+											<span>{{results.max_experience}} Years Max </span>
+
+										</div>
+									</div>
+									<div class="col-lg-2">	
+										<div class="locHead">
+											<h6><b>LOCATION</b></h6> <!--Location header-->
+											<span>{{results.location[0] ? results.location[0] : 'Not Mentioned' }}</span>
+										</div>
+									</div>	
+								</div>
+							</div>
+						<div class="skispace">
+							<div class="skills" ng-repeat="skills in results.skills">  <!--Location -->
+								<li><span>{{skills}}</span></li>
+							</div> 
+						</div>
+					<hr style="height:1px;border:none;color:#333;background-color:rgba(51, 51, 51, 0.18);">
+					 <div class="onoff">
+					 	<p><span>You have to complete this challenge {{results.feature_type}}</span></p>
+					 </div>
+					 <hr style="height:2px;border:none;color:#333;background-color:rgba(51, 51, 51, 0.18);">
+					 </div>
+					</div>
+
+					<div ng-show="((result  | filter:test | filter:tests | myfilter:types| myfilter2:types1 ).length == 0 )" class="Nothing jumbotron">
+						<h1>No Results Found!</h1>
+						<p>Perhaps,change your filter/preferences/search keywords</p>
+					</div>
+			</div>
+			<div ng-show="((result |  filter:test | filter:tests | myfilter:types| myfilter2:types1 ).length !== 0 )" class="pagination">
+			<pagination 
+		      ng-model="currentPage"
+		      total-items="noOfPages"
+		      max-size="maxSize"  
+		      boundary-links="true">
+		 	</pagination>
+		 	</div>
+		</div>
+	</div>
+			<!-- 3rd grid column -->
+			<div class="col-lg-1"></div>
+	</div>
+<!-- Response Js file -->
+<script type="text/javascript" src="response.js"></script>
+</body>
+</html>
